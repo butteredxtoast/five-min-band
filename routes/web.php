@@ -28,7 +28,10 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
         Route::get('/participants', [AdminController::class, 'participants'])->name('admin.participants');
+        Route::put('/participants/{participant}', [AdminController::class, 'updateParticipant'])->name('admin.participants.update');
+        Route::put('/participants/bulk-update', [AdminController::class, 'bulkUpdateParticipants'])->name('admin.participants.bulk-update');
     });
 
     // Profile Routes
