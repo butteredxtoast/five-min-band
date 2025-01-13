@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,6 +15,24 @@ Route::get('/signup', function () {
 
 Route::post('/signup', [ParticipantController::class, 'store'])->name('signup.store');
 
-Route::get('/match', function () {
-    return view('match');
-})->name('match');
+// Auth Routes (from Breeze)
+require __DIR__.'/auth.php';
+
+// Protected Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/match', function () {
+        return view('match');
+    })->name('match');
+
+    // Admin Routes
+    Route::prefix('admin')->group(function () {
+        Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/participants', [AdminController::class, 'participants'])->name('admin.participants');
+    });
+
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
