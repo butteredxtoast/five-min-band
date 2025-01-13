@@ -25,13 +25,15 @@ Route::middleware(['auth'])->group(function () {
     })->name('match');
 
     // Admin Routes
-    Route::prefix('admin')->group(function () {
-        Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
-        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
-        Route::get('/participants', [AdminController::class, 'participants'])->name('admin.participants');
-        Route::put('/participants/{participant}', [AdminController::class, 'updateParticipant'])->name('admin.participants.update');
-        Route::put('/participants/bulk-update', [AdminController::class, 'bulkUpdateParticipants'])->name('admin.participants.bulk-update');
+    Route::middleware(['verified'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
+        Route::get('/participants', [AdminController::class, 'participants'])->name('participants');
+        Route::post('/participants/bulk-activate', [AdminController::class, 'bulkActivateParticipants'])->name('participants.bulk-activate');
+        Route::post('/participants/bulk-deactivate', [AdminController::class, 'bulkDeactivateParticipants'])->name('participants.bulk-deactivate');
+        Route::put('/participants/bulk-update', [AdminController::class, 'bulkUpdateParticipants'])->name('participants.bulk-update');
+        Route::put('/participants/{participant}', [AdminController::class, 'updateParticipant'])->name('participants.update');
     });
 
     // Profile Routes

@@ -43,7 +43,15 @@ class AdminController extends Controller
     public function participants()
     {
         $participants = Participant::all();
-        return view('admin.participants.index', compact('participants'));
+        $availableInstruments = [
+            'Guitar',
+            'Bass',
+            'Drums',
+            'Vocals',
+            'Keys',
+            'Other'
+        ];
+        return view('admin.participants.index', compact('participants', 'availableInstruments'));
     }
 
     /**
@@ -96,5 +104,27 @@ class AdminController extends Controller
         $action = $validated['is_active'] ? 'activated' : 'deactivated';
         return redirect()->route('admin.participants')
             ->with('status', "participants-{$action}");
+    }
+
+    /**
+     * Bulk activate participants.
+     */
+    public function bulkActivateParticipants(Request $request)
+    {
+        $participants = $request->input('participants', []);
+        Participant::whereIn('id', $participants)->update(['is_active' => true]);
+
+        return back()->with('status', 'participants-activated');
+    }
+
+    /**
+     * Bulk deactivate participants.
+     */
+    public function bulkDeactivateParticipants(Request $request)
+    {
+        $participants = $request->input('participants', []);
+        Participant::whereIn('id', $participants)->update(['is_active' => false]);
+
+        return back()->with('status', 'participants-deactivated');
     }
 }
