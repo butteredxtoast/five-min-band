@@ -19,9 +19,9 @@
                        class="inline-block bg-emerald-600 text-white font-semibold px-8 py-4 rounded-lg text-lg hover:bg-emerald-700 transition-colors duration-200 shadow-lg hover:shadow-xl">
                         Sign Up
                     </a>
-                    <a href="{{ route('admin.dashboard') }}" 
+                    <a href="{{ auth()->check() ? route('admin.dashboard') : route('login') }}" 
                        class="inline-block bg-indigo-600 text-white font-semibold px-8 py-4 rounded-lg text-lg hover:bg-indigo-700 transition-colors duration-200 shadow-lg hover:shadow-xl">
-                        Login
+                        {{ auth()->check() ? 'Dashboard' : 'Login' }}
                     </a>
                 </div>
             </div>
