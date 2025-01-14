@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MatchController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/match', function () {
         return view('match');
     })->name('match');
+
+    Route::post('/match/generate', [MatchController::class, 'generate'])->name('match.generate');
 
     // Admin Routes
     Route::middleware(['verified'])->prefix('admin')->name('admin.')->group(function () {
