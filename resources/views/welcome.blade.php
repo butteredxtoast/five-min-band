@@ -1,31 +1,49 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Five Minute Band - Welcome</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Five Minute Band </title>
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="min-h-screen">
+    <div class="hamburger-menu">
+        <button class="hamburger-icon" onclick="toggleMenu()">
+            &#9776;
+        </button>
+        <div class="menu-content flex flex-col space-y-4 p-4" id="menuContent" style="display: none;">
+            @if(auth()->check())
+                <a href="{{ route('admin.dashboard') }}" class="block">Dashboard</a>
+                <a href="{{ route('logout') }}" class="block" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="block">Login</a>
+            @endif
+        </div>
+    </div>
     <div class="container mx-auto px-4 py-16">
         <div class="max-w-4xl mx-auto text-center">
             <!-- Header Section -->
             <div class="mb-12">
-                <h1 class="text-5xl font-bold text-gray-800 mb-4">Welcome to Five Minute Band</h1>
-                
+                <h1 class="text-6xl font-bold mb-6">Five Minute Band</h1>
+                <p class="text-xl mb-8 text-gray-600">Where musicians connect instantly.</p>
                 <!-- CTA Buttons -->
                 <div class="space-x-4">
                     <a href="{{ route('signup') }}" 
-                       class="inline-block bg-emerald-600 text-white font-semibold px-8 py-4 rounded-lg text-lg hover:bg-emerald-700 transition-colors duration-200 shadow-lg hover:shadow-xl">
-                        Sign Up
-                    </a>
-                    <a href="{{ auth()->check() ? route('admin.dashboard') : route('login') }}" 
-                       class="inline-block bg-indigo-600 text-white font-semibold px-8 py-4 rounded-lg text-lg hover:bg-indigo-700 transition-colors duration-200 shadow-lg hover:shadow-xl">
-                        {{ auth()->check() ? 'Dashboard' : 'Login' }}
+                       class="custom-button inline-block font-semibold text-lg">
+                        Join the Band
                     </a>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+    function toggleMenu() {
+        var menu = document.getElementById('menuContent');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+    </script>
 </body>
 </html>
