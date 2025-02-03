@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Musician;
 use Illuminate\Http\Request;
 
-class MatchController extends Controller
+class BandController extends Controller
 {
     public function generate(Request $request)
     {
@@ -18,18 +18,18 @@ class MatchController extends Controller
 
         // If we don't have enough musicians, return with an error
         if ($musicians->count() < $request->musicians) {
-            return back()->with('error', 'Not enough active musicians to generate a match.');
+            return back()->with('error', 'Not enough active musicians to generate a band.');
         }
 
-        // Generate a single match
-        $match = $this->generateMatch($musicians, $request->musicians);
+        // Generate a single band
+        $band = $this->generateBand($musicians, $request->musicians);
 
-        return back()->with('match', $match);
+        return back()->with('band', $band);
     }
 
-    private function generateMatch($musicians, $musiciansPerMatch)
+    private function generateBand($musicians, $musiciansPerBand)
     {
         $musicians = $musicians->shuffle();
-        return $musicians->take($musiciansPerMatch);
+        return $musicians->take($musiciansPerBand);
     }
 }

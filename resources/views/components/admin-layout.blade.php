@@ -38,13 +38,13 @@
                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.musicians') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.musicians') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                                 Musicians
                             </a>
-                            <a href="{{ route('admin.matches') }}"
-                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.matches') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.matches') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Matches
+                            <a href="{{ route('admin.bands.index') }}"
+                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.bands') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.bands') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                Bands
                             </a>
-                            <a href="{{ route('match') }}" 
-                               class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('match') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('match') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Create Match
+                            <a href="{{ route('admin.bands.create') }}" 
+                               class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('band.create') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('band.create') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                Create Band
                             </a>
                             <a href="{{ route('signup') }}" 
                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('signup') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('signup') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">

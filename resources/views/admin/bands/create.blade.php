@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Band Matcher 2000 - Five Minute Band</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100 min-h-screen">
-    <!-- Dashboard Button -->
-    <div class="absolute top-4 left-4">
-        <a href="{{ route('admin.dashboard') }}" 
-           class="inline-block bg-gray-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors duration-200 shadow-lg hover:shadow-xl">
-            ← Dashboard
-        </a>
-    </div>
+<x-admin-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Create Band') }}
+        </h2>
+    </x-slot>
 
     <div class="container mx-auto px-4 py-16">
         <div class="max-w-4xl mx-auto">
@@ -24,9 +14,9 @@
                 </div>
 
                 <div x-data="{ musicians: 3 }">
-                    <form method="POST" action="{{ route('match.generate') }}" class="space-y-6">
+                    <form method="POST" action="{{ route('admin.bands.generate') }}" class="space-y-6">
                         @csrf
-                        
+
                         <div>
                             <label for="musicians" class="block text-sm font-medium text-gray-700">Number of Musicians in Band</label>
                             <div class="mt-2 flex items-center space-x-4">
@@ -59,13 +49,13 @@
                         </div>
                     @endif
 
-                    @if(session('match'))
+                    @if(session('band'))
                         <div class="mt-8">
                             <h2 class="text-xl font-semibold text-gray-800 mb-4">Generated Band Match</h2>
                             <div class="bg-gray-50 rounded-lg p-6">
                                 <h3 class="font-medium text-gray-900 mb-4">Your Five Minute Band</h3>
                                 <ul class="list-disc list-inside space-y-2 text-gray-600">
-                                    @foreach(session('match') as $musician)
+                                    @foreach(session('band') as $musician)
                                         <li>{{ $musician->name }} ({{ implode(', ', $musician->instruments) }})</li>
                                     @endforeach
                                 </ul>
@@ -76,5 +66,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+</x-admin-layout>

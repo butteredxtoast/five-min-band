@@ -31,9 +31,9 @@ class AdminController extends Controller
     /**
      * Show the matches management page.
      */
-    public function matches()
+    public function bands()
     {
-        return view('admin.matches');
+        return view('admin.bands.index');
     }
 
     /**
