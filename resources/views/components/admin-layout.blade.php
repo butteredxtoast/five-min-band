@@ -38,13 +38,17 @@
                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.participants') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.participants') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                                 Participants
                             </a>
+                            <a href="{{ route('admin.matches') }}"
+                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.matches') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.matches') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                Matches
+                            </a>
                             <a href="{{ route('match') }}" 
                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('match') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('match') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Match
+                                Create Match
                             </a>
                             <a href="{{ route('signup') }}" 
                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('signup') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('signup') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Participate
+                                Band Signup
                             </a>
                         </div>
                     </div>

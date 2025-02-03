@@ -8,13 +8,13 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Users Overview -->
+                <!-- Matches Overview -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
-                        <h3 class="text-lg font-semibold mb-4">Users Overview</h3>
-                        <p class="text-gray-600">Total Users: {{ $users->count() }}</p>
+                        <h3 class="text-lg font-semibold mb-4">Matches Overview</h3>
+                        <p class="text-gray-600">Total Matches:</p>
                         <div class="mt-4">
-                            <a href="{{ route('admin.users') }}" class="text-indigo-600 hover:text-indigo-900">View All Users →</a>
+                            <a href="{{ route('admin.matches') }}" class="text-indigo-600 hover:text-indigo-900">View All Matches →</a>
                         </div>
                     </div>
                 </div>

@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     // Admin Routes
     Route::middleware(['verified'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/matches', [AdminController::class, 'matches'])->name('matches');
         Route::get('/users', [AdminController::class, 'users'])->name('users');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
         Route::get('/participants', [AdminController::class, 'participants'])->name('participants');
@@ -43,4 +44,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/test-web', function() {
+        return response()->json(['message' => 'Web route is working']);
+    });
 });
