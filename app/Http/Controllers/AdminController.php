@@ -29,7 +29,15 @@ class AdminController extends Controller
     }
 
     /**
-     * Show the users list.
+     * Show the matches management page.
+     */
+    public function matches()
+    {
+        return view('admin.matches');
+    }
+
+    /**
+     * Show the users management page.
      */
     public function users()
     {

@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     // Admin Routes
     Route::middleware(['verified'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/matches', [AdminController::class, 'matches'])->name('matches');
         Route::get('/users', [AdminController::class, 'users'])->name('users');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
         Route::get('/participants', [AdminController::class, 'participants'])->name('participants');
