@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Musician;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class MusicianController extends Controller
 {
     public function store(Request $request)
     {
-        Log::info($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'instruments' => 'required|array',

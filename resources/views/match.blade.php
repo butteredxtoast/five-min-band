@@ -20,27 +20,27 @@
             <div class="bg-white rounded-lg shadow-lg p-8">
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-bold text-gray-800 mb-4">Band Matcher 2000</h1>
-                    <p class="text-gray-600">Generate a random band match from our pool of participants!</p>
+                    <p class="text-gray-600">Generate a random band match from our pool of musicians!</p>
                 </div>
 
-                <div x-data="{ participants: 3 }">
+                <div x-data="{ musicians: 3 }">
                     <form method="POST" action="{{ route('match.generate') }}" class="space-y-6">
                         @csrf
                         
                         <div>
-                            <label for="participants" class="block text-sm font-medium text-gray-700">Number of Participants in Band</label>
+                            <label for="musicians" class="block text-sm font-medium text-gray-700">Number of Musicians in Band</label>
                             <div class="mt-2 flex items-center space-x-4">
                                 <input type="number" 
-                                       name="participants" 
-                                       id="participants"
-                                       x-model="participants"
+                                       name="musicians" 
+                                       id="musicians"
+                                       x-model="musicians"
                                        min="2"
                                        max="10"
                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                        value="3">
-                                <span class="text-sm text-gray-500">participants</span>
+                                <span class="text-sm text-gray-500">musicians</span>
                             </div>
-                            @error('participants')
+                            @error('musicians')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
