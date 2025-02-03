@@ -34,9 +34,9 @@
                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.users') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.users') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                                 Users
                             </a>
-                            <a href="{{ route('admin.participants') }}" 
-                               class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.participants') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.participants') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Participants
+                            <a href="{{ route('admin.musicians') }}" 
+                               class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.musicians') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.musicians') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                Musicians
                             </a>
                             <a href="{{ route('admin.matches') }}"
                                 class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('admin.matches') ? 'border-indigo-400' : 'border-transparent' }} text-sm font-medium leading-5 {{ request()->routeIs('admin.matches') ? 'text-gray-900' : 'text-gray-500' }} hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">

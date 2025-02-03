@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Participant;
+use App\Models\Musician;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -23,9 +23,9 @@ class AdminController extends Controller
     public function dashboard()
     {
         $users = User::all();
-        $participants = Participant::all();
+        $musicians = Musician::all();
         
-        return view('admin.dashboard', compact('users', 'participants'));
+        return view('admin.dashboard', compact('users', 'musicians'));
     }
 
     /**
@@ -46,11 +46,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Show the participants list.
+     * Show the musicians list.
      */
-    public function participants()
+    public function musicians()
     {
-        $participants = Participant::all();
+        $musicians = Musician::all();
         $availableInstruments = [
             'Guitar',
             'Bass',
@@ -59,7 +59,7 @@ class AdminController extends Controller
             'Keys',
             'Other'
         ];
-        return view('admin.participants.index', compact('participants', 'availableInstruments'));
+        return view('admin.musicians.index', compact('musicians', 'availableInstruments'));
     }
 
     /**
@@ -78,9 +78,9 @@ class AdminController extends Controller
     }
 
     /**
-     * Update the specified participant.
+     * Update the specified musician.
      */
-    public function updateParticipant(Request $request, Participant $participant)
+    public function updateMusician(Request $request, Musician $musician)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -90,49 +90,49 @@ class AdminController extends Controller
             'is_active' => ['required', 'boolean'],
         ]);
 
-        $participant->update($validated);
+        $musician->update($validated);
 
-        return redirect()->route('admin.participants')->with('status', 'participant-updated');
+        return redirect()->route('admin.musicians')->with('status', 'musician-updated');
     }
 
     /**
-     * Bulk update participants.
+     * Bulk update musicians.
      */
-    public function bulkUpdateParticipants(Request $request)
+    public function bulkUpdateMusicians(Request $request)
     {
         $validated = $request->validate([
-            'participant_ids' => ['required', 'array'],
-            'participant_ids.*' => ['exists:participants,id'],
+            'musician_ids' => ['required', 'array'],
+            'musician_ids.*' => ['exists:musicians,id'],
             'is_active' => ['required', 'boolean'],
         ]);
 
-        Participant::whereIn('id', $validated['participant_ids'])
+        Musician::whereIn('id', $validated['musician_ids'])
             ->update(['is_active' => $validated['is_active']]);
 
         $action = $validated['is_active'] ? 'activated' : 'deactivated';
-        return redirect()->route('admin.participants')
-            ->with('status', "participants-{$action}");
+        return redirect()->route('admin.musicians')
+            ->with('status', "musicians-{$action}");
     }
 
     /**
-     * Bulk activate participants.
+     * Bulk activate musicians.
      */
-    public function bulkActivateParticipants(Request $request)
+    public function bulkActivateMusicians(Request $request)
     {
-        $participants = $request->input('participants', []);
-        Participant::whereIn('id', $participants)->update(['is_active' => true]);
+        $musicians = $request->input('musicians', []);
+        Musician::whereIn('id', $musicians)->update(['is_active' => true]);
 
-        return back()->with('status', 'participants-activated');
+        return back()->with('status', 'musicians-activated');
     }
 
     /**
-     * Bulk deactivate participants.
+     * Bulk deactivate musicians.
      */
-    public function bulkDeactivateParticipants(Request $request)
+    public function bulkDeactivateMusicians(Request $request)
     {
-        $participants = $request->input('participants', []);
-        Participant::whereIn('id', $participants)->update(['is_active' => false]);
+        $musicians = $request->input('musicians', []);
+        Musician::whereIn('id', $musicians)->update(['is_active' => false]);
 
-        return back()->with('status', 'participants-deactivated');
+        return back()->with('status', 'musicians-deactivated');
     }
 }

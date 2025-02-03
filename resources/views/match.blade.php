@@ -65,8 +65,8 @@
                             <div class="bg-gray-50 rounded-lg p-6">
                                 <h3 class="font-medium text-gray-900 mb-4">Your Five Minute Band</h3>
                                 <ul class="list-disc list-inside space-y-2 text-gray-600">
-                                    @foreach(session('match') as $participant)
-                                        <li>{{ $participant->name }} ({{ implode(', ', $participant->instruments) }})</li>
+                                    @foreach(session('match') as $musician)
+                                        <li>{{ $musician->name }} ({{ implode(', ', $musician->instruments) }})</li>
                                     @endforeach
                                 </ul>
                             </div>

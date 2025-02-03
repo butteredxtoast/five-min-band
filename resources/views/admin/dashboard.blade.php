@@ -19,13 +19,13 @@
                     </div>
                 </div>
 
-                <!-- Participants Overview -->
+                <!-- Musicians Overview -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
-                        <h3 class="text-lg font-semibold mb-4">Participants Overview</h3>
-                        <p class="text-gray-600">Total Participants: {{ $participants->count() }}</p>
+                        <h3 class="text-lg font-semibold mb-4">Musicians Overview</h3>
+                        <p class="text-gray-600">Total Musicians: {{ $musicians->count() }}</p>
                         <div class="mt-4">
-                            <a href="{{ route('admin.participants') }}" class="text-indigo-600 hover:text-indigo-900">View All Participants →</a>
+                            <a href="{{ route('admin.musicians') }}" class="text-indigo-600 hover:text-indigo-900">View All Musicians →</a>
                         </div>
                     </div>
                 </div>

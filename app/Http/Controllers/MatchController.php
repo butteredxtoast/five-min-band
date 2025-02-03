@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Participant;
+use App\Models\Musician;
 use Illuminate\Http\Request;
 
 class MatchController extends Controller
@@ -10,26 +10,26 @@ class MatchController extends Controller
     public function generate(Request $request)
     {
         $request->validate([
-            'participants' => ['required', 'integer', 'min:2', 'max:10'],
+            'musicians' => ['required', 'integer', 'min:2', 'max:10'],
         ]);
 
-        // Get all active participants
-        $participants = Participant::where('is_active', true)->get();
+        // Get all active musicians
+        $musicians = Musician::where('is_active', true)->get();
 
-        // If we don't have enough participants, return with an error
-        if ($participants->count() < $request->participants) {
-            return back()->with('error', 'Not enough active participants to generate a match.');
+        // If we don't have enough musicians, return with an error
+        if ($musicians->count() < $request->musicians) {
+            return back()->with('error', 'Not enough active musicians to generate a match.');
         }
 
         // Generate a single match
-        $match = $this->generateMatch($participants, $request->participants);
+        $match = $this->generateMatch($musicians, $request->musicians);
 
         return back()->with('match', $match);
     }
 
-    private function generateMatch($participants, $participantsPerMatch)
+    private function generateMatch($musicians, $musiciansPerMatch)
     {
-        $participants = $participants->shuffle();
-        return $participants->take($participantsPerMatch);
+        $musicians = $musicians->shuffle();
+        return $musicians->take($musiciansPerMatch);
     }
 }

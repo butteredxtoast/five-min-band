@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Participant;
+use App\Models\Musician;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
-class ParticipantController extends Controller
+class MusicianController extends Controller
 {
     public function store(Request $request)
     {
+        Log::info($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'instruments' => 'required|array',
@@ -16,7 +18,7 @@ class ParticipantController extends Controller
             'other' => 'nullable|string|max:255'
         ]);
 
-        $participant = Participant::create([
+        $musician = Musician::create([
             'name' => $validated['name'],
             'instruments' => $validated['instruments'],
             'other' => $validated['other'],
