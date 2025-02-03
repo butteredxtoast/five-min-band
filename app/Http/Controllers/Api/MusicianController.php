@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Participant;
+use App\Models\Musician;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class ParticipantController extends Controller
+class MusicianController extends Controller
 {
     private const VALID_INSTRUMENTS = ['vocals', 'guitar', 'bass', 'keys', 'other'];
 
@@ -22,8 +22,8 @@ class ParticipantController extends Controller
             'is_active' => 'boolean'
         ]);
 
-        $participant = Participant::create($validated);
-        return response()->json($participant, 201);
+        $musician = Musician::create($validated);
+        return response()->json($musician, 201);
     }
 
     public function random(): JsonResponse
@@ -34,13 +34,13 @@ class ParticipantController extends Controller
             $numInstruments
         );
 
-        $participant = Participant::create([
+        $musician = Musician::create([
             'name' => fake()->name(),
             'instruments' => $randomInstruments,
             'other' => null,
             'is_active' => true
         ]);
 
-        return response()->json($participant, 201);
+        return response()->json($musician, 201);
     }
 } 

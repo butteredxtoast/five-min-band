@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MatchController;
-use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\MusicianController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +14,7 @@ Route::get('/signup', function () {
     return view('signup');
 })->name('signup');
 
-Route::post('/signup', [ParticipantController::class, 'store'])->name('signup.store');
+Route::post('/signup', [MusicianController::class, 'store'])->name('signup.store');
 
 // Auth Routes (from Breeze)
 require __DIR__.'/auth.php';
@@ -33,11 +33,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/matches', [AdminController::class, 'matches'])->name('matches');
         Route::get('/users', [AdminController::class, 'users'])->name('users');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
-        Route::get('/participants', [AdminController::class, 'participants'])->name('participants');
-        Route::post('/participants/bulk-activate', [AdminController::class, 'bulkActivateParticipants'])->name('participants.bulk-activate');
-        Route::post('/participants/bulk-deactivate', [AdminController::class, 'bulkDeactivateParticipants'])->name('participants.bulk-deactivate');
-        Route::put('/participants/bulk-update', [AdminController::class, 'bulkUpdateParticipants'])->name('participants.bulk-update');
-        Route::put('/participants/{participant}', [AdminController::class, 'updateParticipant'])->name('participants.update');
+        Route::get('/musicians', [AdminController::class, 'musicians'])->name('musicians');
+        Route::post('/musicians/bulk-activate', [AdminController::class, 'bulkActivateMusicians'])->name('musicians.bulk-activate');
+        Route::post('/musicians/bulk-deactivate', [AdminController::class, 'bulkDeactivateMusicians'])->name('musicians.bulk-deactivate');
+        Route::put('/musicians/bulk-update', [AdminController::class, 'bulkUpdateMusicians'])->name('musicians.bulk-update');
+        Route::put('/musicians/{musician}', [AdminController::class, 'updateMusician'])->name('musicians.update');
     });
 
     // Profile Routes

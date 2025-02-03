@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ParticipantController;
+use App\Http\Controllers\Api\MusicianController;
 use App\Http\Controllers\Api\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Participant routes
-Route::prefix('participant')->group(function () {
-    Route::post('/', [ParticipantController::class, 'store']);
-    Route::post('/random', [ParticipantController::class, 'random']);
+// Musician routes
+Route::prefix('musician')->group(function () {
+    Route::post('/', [MusicianController::class, 'store']);
+    Route::post('/random', [MusicianController::class, 'random']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
