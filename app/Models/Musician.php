@@ -13,11 +13,13 @@ class Musician extends Model
         'name',
         'instruments',
         'other',
+        'vocalist',
         'is_active'
     ];
 
     protected $casts = [
         'instruments' => 'array',
+        'vocalist' => 'boolean',
         'is_active' => 'boolean'
     ];
 }

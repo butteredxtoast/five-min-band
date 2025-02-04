@@ -16,11 +16,15 @@ class MusicianController extends Controller
             'other' => 'nullable|string|max:255'
         ]);
 
+        // Filter out 'Vocals' from instruments array as it will be handled by the vocalist boolean
+        $instruments = array_filter($validated['instruments'], fn($instrument) => $instrument !== 'Vocals');
+        
         $musician = Musician::create([
             'name' => $validated['name'],
-            'instruments' => $validated['instruments'],
+            'instruments' => array_values($instruments), // Reindex array after filtering
             'other' => $validated['other'],
-            'is_active' => true
+            'is_active' => true,
+            'vocalist' => in_array('Vocals', $validated['instruments'])
         ]);
 
         return redirect()->route('welcome')->with('success', 'Thank you for signing up!');
