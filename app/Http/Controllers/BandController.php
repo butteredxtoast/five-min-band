@@ -4,32 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\Musician;
 use Illuminate\Http\Request;
+use App\Services\BandMatchingService;
 
 class BandController extends Controller
 {
+    private BandMatchingService $matchingService;
+
+    public function __construct(BandMatchingService $matchingService)
+    {
+        $this->matchingService = $matchingService;
+    }
+
     public function generate(Request $request)
     {
         $request->validate([
-            'musicians' => ['required', 'integer', 'min:2', 'max:10'],
+            'musicians' => ['required', 'integer', 'min:3', 'max:10'],
+            'include_vocalist' => ['boolean'],
         ]);
 
-        // Get all active musicians
-        $musicians = Musician::where('is_active', true)->get();
+        try {
+            $band = $this->matchingService->generate(
+                $request->musicians,
+                $request->boolean('include_vocalist', true)
+            );
 
-        // If we don't have enough musicians, return with an error
-        if ($musicians->count() < $request->musicians) {
-            return back()->with('error', 'Not enough active musicians to generate a band.');
+            return back()->with('success', 'Band generated successfully!')
+                        ->with('band', $band);
+
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        // Generate a single band
-        $band = $this->generateBand($musicians, $request->musicians);
-
-        return back()->with('band', $band);
-    }
-
-    private function generateBand($musicians, $musiciansPerBand)
-    {
-        $musicians = $musicians->shuffle();
-        return $musicians->take($musiciansPerBand);
     }
 }
