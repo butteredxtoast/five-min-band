@@ -89,6 +89,9 @@
                             <div class="flex-1 px-6 py-3">
                                 <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Name</span>
                             </div>
+                            <div class="w-24 px-6 py-3">
+                                <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Vocalist</span>
+                            </div>
                             <div class="flex-1 px-6 py-3">
                                 <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Instruments</span>
                             </div>
@@ -120,6 +123,11 @@
                                     </div>
                                     <div class="flex-1 px-6 py-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $musician->name }}</div>
+                                    </div>
+                                    <div class="w-24 px-6 py-4">
+                                        <span class="inline-flex px-2 text-xs font-semibold leading-5 {{ $musician->vocalist ? 'text-purple-800 bg-purple-100' : 'text-gray-800 bg-gray-100' }} rounded-full">
+                                            {{ $musician->vocalist ? 'Yes' : 'No' }}
+                                        </span>
                                     </div>
                                     <div class="flex-1 px-6 py-4">
                                         <div class="text-sm text-gray-900">{{ is_array($musician->instruments) ? implode(', ', $musician->instruments) : $musician->instruments }}</div>
@@ -173,19 +181,35 @@
                                                     <x-input-label value="Instruments" class="text-sm font-medium mb-2" />
                                                     <div class="grid grid-cols-2 gap-4">
                                                         @foreach($availableInstruments as $instrument)
-                                                            <label class="inline-flex items-center">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    name="instruments[]"
-                                                                    value="{{ $instrument }}"
-                                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                                                    {{ is_array($musician->instruments) && in_array($instrument, $musician->instruments) ? 'checked' : '' }}
-                                                                >
-                                                                <span class="ml-2 text-sm text-gray-600">{{ $instrument }}</span>
-                                                            </label>
+                                                            @if($instrument !== 'Vocals')
+                                                                <label class="inline-flex items-center">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        name="instruments[]"
+                                                                        value="{{ $instrument }}"
+                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                                                        {{ is_array($musician->instruments) && in_array($instrument, $musician->instruments) ? 'checked' : '' }}
+                                                                    >
+                                                                    <span class="ml-2 text-sm text-gray-600">{{ $instrument }}</span>
+                                                                </label>
+                                                            @endif
                                                         @endforeach
                                                     </div>
                                                     <x-input-error :messages="$errors->get('instruments')" class="mt-2" />
+                                                </div>
+
+                                                <div>
+                                                    <x-input-label value="Vocalist" class="text-sm font-medium mb-2" />
+                                                    <label class="inline-flex items-center">
+                                                        <input
+                                                            type="checkbox"
+                                                            name="vocalist"
+                                                            value="1"
+                                                            {{ old('vocalist', $musician->vocalist) ? 'checked' : '' }}
+                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                                        >
+                                                        <span class="ml-2 text-sm text-gray-600">Can sing/do vocals</span>
+                                                    </label>
                                                 </div>
 
                                                 <div>

@@ -84,13 +84,25 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'instruments' => ['required', 'array'],
+            'instruments' => ['nullable', 'array'],
             'instruments.*' => ['string'],
             'other' => ['nullable', 'string'],
             'is_active' => ['required', 'boolean'],
+            'vocalist' => ['boolean']
         ]);
 
-        $musician->update($validated);
+        // Filter out 'Vocals' from instruments array if it exists
+        $instruments = isset($validated['instruments']) 
+            ? array_filter($validated['instruments'], fn($instrument) => $instrument !== 'Vocals')
+            : [];
+
+        $musician->update([
+            'name' => $validated['name'],
+            'instruments' => array_values($instruments), // Reindex array after filtering
+            'other' => $validated['other'],
+            'is_active' => $validated['is_active'],
+            'vocalist' => $request->boolean('vocalist')
+        ]);
 
         return redirect()->route('admin.musicians')->with('status', 'musician-updated');
     }
