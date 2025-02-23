@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BandController;
 use App\Http\Controllers\MusicianController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Musician;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,6 +19,15 @@ Route::post('/signup', [MusicianController::class, 'store'])->name('signup.store
 
 // Auth Routes (from Breeze)
 require __DIR__.'/auth.php';
+
+if (app()->environment('local')) {
+    Route::get('/dev/generate-musician', function() {
+        $musician = Musician::factory()->create();
+        return redirect()
+            ->route('musicians.show', $musician)
+            ->with('success', 'Random musician generated!');
+    });
+}
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {

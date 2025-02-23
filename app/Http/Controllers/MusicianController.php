@@ -2,36 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMusicianRequest;
 use App\Models\Musician;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 class MusicianController extends Controller
 {
-    public function store(Request $request)
+    public function create(): View
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'instruments' => 'nullable|array',
-            'instruments.*' => 'string|in:Vocals,Guitar,Bass,Drums,Keys,Other',
-            'other' => 'nullable|string|max:255'
+        return view('musicians.create', [
+            'instruments' => ['Vocals', 'Guitar', 'Bass', 'Drums', 'Keys', 'Other']
         ]);
+    }
 
-        // Check if musician is a vocalist
-        $isVocalist = isset($validated['instruments']) && in_array('Vocals', $validated['instruments']);
+    public function store(StoreMusicianRequest $request): JsonResponse
+    {
+        try {
+            $musician = Musician::create($request->validated());
 
-        // Filter out 'Vocals' from instruments array if it exists
-        $instruments = isset($validated['instruments'])
-            ? array_filter($validated['instruments'], fn($instrument) => $instrument !== 'Vocals')
-            : [];
+            return response()->json([
+                'success' => true,
+                'message' => 'Musician created successfully'
+            ], 201);
 
-        $musician = Musician::create([
-            'name' => $validated['name'],
-            'instruments' => array_values($instruments), // Reindex array after filtering
-            'other' => $validated['other'],
-            'is_active' => true,
-            'vocalist' => $isVocalist
-        ]);
-
-        return redirect()->route('welcome')->with('success', 'Thank you for signing up!');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create musician'
+            ], 500);
+        }
     }
 }
