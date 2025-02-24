@@ -13,26 +13,45 @@
                     <p class="text-gray-600">Generate a random band match from our pool of musicians!</p>
                 </div>
 
-                <div x-data="{ musicians: 3 }">
+                <div x-data="{ musician_count: 3 }">
                     <form method="POST" action="{{ route('admin.bands.generate') }}" class="space-y-6">
                         @csrf
 
                         <div>
-                            <label for="musicians" class="block text-sm font-medium text-gray-700">Number of Musicians in Band</label>
+                            <label for="musician_count" class="block text-sm font-medium text-gray-700">Number of Musicians in Band</label>
                             <div class="mt-2 flex items-center space-x-4">
-                                <input type="number" 
-                                       name="musicians" 
-                                       id="musicians"
-                                       x-model="musicians"
+                                <input type="number"
+                                       name="musician_count"
+                                       id="musician_count"
+                                       x-model="musician_count"
                                        min="2"
                                        max="10"
                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                        value="3">
-                                <span class="text-sm text-gray-500">musicians</span>
+                                <span class="text-sm text-gray-500">musician_count</span>
                             </div>
-                            @error('musicians')
+                            @error('musician_count')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox"
+                                   name="include_vocalist"
+                                   id="include_vocalist"
+                                   value="1"
+                                   checked
+                                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50">
+                            <label for="include_vocalist" class="text-sm text-gray-700">Include Vocalist</label>
+                        </div>
+
+                        <div class="mt-4">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Band Name</label>
+                            <input type="text"
+                                   name="name"
+                                   id="name"
+                                   class="mt-1 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                   placeholder="Enter band name">
                         </div>
 
                         <div class="flex justify-center">
@@ -55,10 +74,34 @@
                             <div class="bg-gray-50 rounded-lg p-6">
                                 <h3 class="font-medium text-gray-900 mb-4">Your Five Minute Band</h3>
                                 <ul class="list-disc list-inside space-y-2 text-gray-600">
-                                    @foreach(session('band') as $musician)
-                                        <li>{{ $musician->name }} ({{ implode(', ', $musician->instruments) }})</li>
+                                    @foreach(session('band')->musicians as $musician)
+                                        <li>
+                                            {{ $musician->name }} -
+                                            @if($musician->pivot->vocalist)
+                                                <span class="text-purple-600 font-medium">Vocalist</span>
+                                                @if($musician->pivot->instrument)
+                                                    and
+                                                    <span class="text-blue-600 font-medium">{{ $musician->pivot->instrument }}</span>
+                                                @endif
+                                            @else
+                                                <span class="text-blue-600 font-medium">{{ $musician->pivot->instrument }}</span>
+                                            @endif
+                                        </li>
                                     @endforeach
                                 </ul>
+
+                                @if(!session('band')->isComplete())
+                                    <p class="mt-4 text-amber-600">
+                                        <svg class="inline-block w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                        </svg>
+                                        This band is incomplete! Missing some required instruments.
+                                    </p>
+                                @endif
+
+                                <div class="mt-6 text-sm text-gray-500">
+                                    Generated at: {{ session('band')->created_at->format('M d, Y g:ia') }}
+                                </div>
                             </div>
                         </div>
                     @endif

@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Band;
 use App\Models\Musician;
+use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class BandMatchingService
 {
@@ -16,15 +18,23 @@ class BandMatchingService
     /**
      * Generate a new band with matched musicians
      */
-    public function generate(int $musicianCount, bool $includeVocalist = true): Band
+    public function generate(int $musicianCount, bool $includeVocalist): Band
     {
+        Log::info("catdog generate", [
+            'musician count' => $musicianCount,
+            'include vocalist' => $includeVocalist
+        ]);
+
         $musicians = $this->getEligibleMusicians();
 
         if ($musicians->count() < $musicianCount) {
-            throw new \Exception("Not enough active musicians to generate a band.");
+            throw new Exception("Not enough active musicians to generate a band.");
         }
 
-        // Create the band
+        Log::info("catdog musician count", [
+            'musician count' => $musicians->count()
+        ]);
+
         $band = Band::create([
             'metadata' => [
                 'generated_at' => now(),
@@ -33,13 +43,15 @@ class BandMatchingService
             ]
         ]);
 
-        // Assign instruments based on requirements
+        Log::info("catdog band", [
+            'band' => $band
+        ]);
+
         $this->assignRequiredInstruments($band, $musicians);
 
-        // Optionally assign a vocalist
-        if ($includeVocalist) {
-            $this->assignVocalist($band, $musicians);
-        }
+//        if ($includeVocalist) {
+//            $this->assignVocalist($band, $musicians);
+//        }
 
         return $band->fresh(['musicians']);
     }
@@ -49,46 +61,90 @@ class BandMatchingService
     */
     private function getEligibleMusicians(): Collection
     {
-        return Musician::where('is_active', true)->get();
+        $eligible = Musician::where('is_active', true)->get();
+        Log::info("catdog eligible", [
+            'eligible' => $eligible->map(function ($musician) {
+                return [
+                    'id' => $musician->id,
+                    'name' => $musician->name,
+                    'instruments' => json_encode($musician->instruments),
+                    'vocalist' => $musician->vocalist,
+                    'other' => $musician->other,
+                    'is_active' => $musician->is_active,
+                    'created_at' => $musician->created_at,
+                    'updated_at' => $musician->updated_at,
+                ];
+            })->toArray()
+        ]);
+        return $eligible;
     }
 
     /**
      * Assign required instruments to the band
+     * @throws Exception
      */
     private function assignRequiredInstruments(Band $band, Collection $musicians): void
     {
+        Log::info("catdog assign required instruments", [
+            'band' => $band,
+            'musicians' => $musicians->map(function ($musician) {
+                return [
+                    'id' => $musician->id,
+                    'name' => $musician->name,
+                    'instruments' => json_encode($musician->instruments),
+                    'vocalist' => $musician->vocalist,
+                    'other' => $musician->other,
+                    'is_active' => $musician->is_active,
+                    'created_at' => $musician->created_at,
+                    'updated_at' => $musician->updated_at,
+                ];
+            })->toArray()
+        ]);
+
         foreach (self::REQUIRED_INSTRUMENTS as $instrument) {
-            // Find musicians who can play this instrument
             $eligibleMusicians = $musicians->filter(function ($musician) use ($instrument) {
                 return in_array($instrument, $musician->instruments);
             });
 
+            Log::info("assignRequired", [
+                'instrument' => $instrument,
+                'eligible_musicians' => $eligibleMusicians->map(fn($musician) => [
+                    'id' => $musician->id,
+                    'name' => $musician->name,
+                    'instruments' => $musician->instruments
+                ])->toArray()
+            ]);
+
             if ($eligibleMusicians->isEmpty()) {
-                throw new \Exception("No available musicians can play $instrument");
+                throw new Exception("No available musicians can play $instrument");
             }
 
-            // Assign a random eligible musician to the band
             $selectedMusician = $eligibleMusicians->random();
-            
-            // Add the musician to the band
+
             $band->addMusician($selectedMusician, $instrument);
 
-            // Remove the musician from the eligible pool
             $musicians = $musicians->reject(fn($m) => $m->id === $selectedMusician->id);
         }
     }
 
     /**
      * Assign a vocalist to the band
+     * @throws Exception
      */
     private function assignVocalist(Band $band, Collection $musicians): void
     {
-        // Find a vocalist who can play any instrument
-        $vocalists = $musicians->filter(fn($musician) => $musician->vocalist);
+        try {
+            $vocalists = $musicians->filter(fn($musician) => $musician->vocalist);
 
-        if ($vocalists->isNotEmpty()) {
-            $selectedVocalist = $vocalists->random();
-            $band->addMusician($selectedVocalist, null, true);
+            if ($vocalists->isNotEmpty()) {
+                $selectedVocalist = $vocalists->random();
+                $band->addMusician($selectedVocalist, null, true);
+            }
+        } catch (Exception $e) {
+            Log::warning('Failed to assign vocalist', [
+                'band_id' => $band->id,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 }

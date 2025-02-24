@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Band;
 use App\Models\User;
 use App\Models\Musician;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class AdminController extends Controller
     {
         $users = User::all();
         $musicians = Musician::all();
-        
+
         return view('admin.dashboard', compact('users', 'musicians'));
     }
 
@@ -33,7 +34,8 @@ class AdminController extends Controller
      */
     public function bands()
     {
-        return view('admin.bands.index');
+        $bands = Band::with('musicians')->get();
+        return view('admin.bands.index', compact('bands'));
     }
 
     /**
@@ -92,7 +94,7 @@ class AdminController extends Controller
         ]);
 
         // Filter out 'Vocals' from instruments array if it exists
-        $instruments = isset($validated['instruments']) 
+        $instruments = isset($validated['instruments'])
             ? array_filter($validated['instruments'], fn($instrument) => $instrument !== 'Vocals')
             : [];
 

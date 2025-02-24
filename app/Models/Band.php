@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Log;
 
 class Band extends Model
 {
@@ -25,7 +27,8 @@ class Band extends Model
      */
     public function musicians(): BelongsToMany
     {
-        return $this->belongsToMany(Musician::class, 'bands_musicians')
+        return $this->belongsToMany(Musician::class, 'band_musicians')
+        ->using(BandMusician::class)
         ->withPivot('instrument', 'vocalist', 'match_metadata', 'match_score')
         ->withTimestamps();
     }
@@ -42,22 +45,30 @@ class Band extends Model
 
     /**
      * Assign a musician to an instrument in the band
-     * 
+     *
      * @param Musician $musician
      * @param string $instrument
      * @param bool $asVocalist
-     * 
-     * @throws \Exception
-     * 
+     *
+     * @throws Exception
+     *
      */
     public function addMusician(Musician $musician, string $instrument, bool $asVocalist = false): void
     {
+        Log::info('catdog Adding musician to band', [
+            'band_id' => $this->id,
+            'musician_id' => $musician->id,
+            'instrument' => $instrument,
+            'as_vocalist' => $asVocalist,
+            'musician_instruments' => $musician->instruments
+        ]);
+
         if ($instrument && !in_array($instrument, $musician->instruments)) {
-            throw new \Exception("Instrument $instrument is not valid for musician " . $musician->name);
+            throw new Exception("Instrument $instrument is not valid for musician " . $musician->name);
         }
 
         if ($asVocalist && !$musician->vocalist) {
-            throw new \Exception("Musician is not a vocalist");
+            throw new Exception("Musician is not a vocalist");
         }
 
         $this->musicians()->attach($musician->id, [
@@ -87,9 +98,9 @@ class Band extends Model
 
     /**
      * Remove a musician from the band
-     * 
+     *
      * @param Musician $musician
-     * 
+     *
      */
 
     public function removeMusician(Musician $musician): void
