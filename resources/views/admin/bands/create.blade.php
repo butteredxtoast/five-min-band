@@ -28,21 +28,10 @@
                                        max="10"
                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                        value="3">
-                                <span class="text-sm text-gray-500">musician_count</span>
                             </div>
                             @error('musician_count')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                        </div>
-
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox"
-                                   name="include_vocalist"
-                                   id="include_vocalist"
-                                   value="1"
-                                   checked
-                                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50">
-                            <label for="include_vocalist" class="text-sm text-gray-700">Include Vocalist</label>
                         </div>
 
                         <div class="mt-4">
@@ -54,6 +43,15 @@
                                    placeholder="Enter band name">
                         </div>
 
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox"
+                                   name="include_vocalist"
+                                   id="include_vocalist"
+                                   value="1"
+                                   checked
+                                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50">
+                            <label for="include_vocalist" class="text-sm text-gray-700">Include Vocalist</label>
+                        </div>
                         <div class="flex justify-center">
                             <button type="submit"
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

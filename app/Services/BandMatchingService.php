@@ -17,6 +17,7 @@ class BandMatchingService
 
     /**
      * Generate a new band with matched musicians
+     * @throws Exception
      */
     public function generate(int $musicianCount, bool $includeVocalist): Band
     {
@@ -49,9 +50,9 @@ class BandMatchingService
 
         $this->assignRequiredInstruments($band, $musicians);
 
-//        if ($includeVocalist) {
-//            $this->assignVocalist($band, $musicians);
-//        }
+        if ($includeVocalist) {
+            $this->assignVocalist($band, $musicians);
+        }
 
         return $band->fresh(['musicians']);
     }

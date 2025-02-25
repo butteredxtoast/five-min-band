@@ -39,7 +39,7 @@
                         }
                     }" class="space-y-4">
                         <!-- Bulk Actions -->
-                        <div x-show="selectedMusicians.length > 0" 
+                        <div x-show="selectedMusicians.length > 0"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform -translate-y-2"
                              x-transition:enter-end="opacity-100 transform translate-y-0"
@@ -115,7 +115,7 @@
                                 <div class="flex items-center hover:bg-gray-50">
                                     <div class="w-12 px-6 py-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" 
+                                            <input type="checkbox"
                                                 class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                                 value="{{ $musician->id }}"
                                                 x-model="selectedMusicians">
@@ -144,7 +144,7 @@
                                         <div class="text-sm text-gray-500">{{ $musician->created_at->format('M d, Y') }}</div>
                                     </div>
                                     <div class="w-24 px-6 py-4 text-right">
-                                        <button 
+                                        <button
                                             x-data=""
                                             x-on:click.prevent="$dispatch('open-modal', 'edit-musician-{{ $musician->id }}')"
                                             class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
@@ -188,7 +188,7 @@
                                                                         name="instruments[]"
                                                                         value="{{ $instrument }}"
                                                                         class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                                                        {{ is_array($musician->instruments) && in_array($instrument, $musician->instruments) ? 'checked' : '' }}
+                                                                        {{ is_array($musician->instruments) && in_array(strtolower($instrument), $musician->instruments) ? 'checked' : '' }}
                                                                     >
                                                                     <span class="ml-2 text-sm text-gray-600">{{ $instrument }}</span>
                                                                 </label>
@@ -240,7 +240,7 @@
                                             </div>
 
                                             <div class="mt-8 flex justify-end space-x-3">
-                                                <button type="button" 
+                                                <button type="button"
                                                     x-on:click="$dispatch('close')"
                                                     class="px-4 py-2 bg-red-50 text-red-700 rounded-lg text-sm font-medium hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
                                                     Cancel

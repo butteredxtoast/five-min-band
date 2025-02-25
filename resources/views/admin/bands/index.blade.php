@@ -28,7 +28,7 @@
                             <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Status</span>
                         </div>
                         <div class="w-32 px-6 py-3">
-                            <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Complete</span>
+                            <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Played</span>
                         </div>
                         <div class="w-32 px-6 py-3">
                             <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Created</span>
@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="w-32 px-6 py-4">
                                     <span class="inline-flex px-2 text-xs font-semibold leading-5 {{ $band->isComplete() ? 'text-green-800 bg-green-100' : 'text-yellow-800 bg-yellow-100' }} rounded-full">
-                                        {{ $band->isComplete() ? 'Complete' : 'Incomplete' }}
+                                        {{ $band->isComplete() ? 'Played' : 'Not Played' }}
                                     </span>
                                 </div>
                                 <div class="w-32 px-6 py-4">

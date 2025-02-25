@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Band;
-use App\Models\Musician;
+use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use App\Services\BandMatchingService;
@@ -38,7 +38,7 @@ class BandController extends Controller
             return back()->with('success', 'Band generated successfully!')
                 ->with('band', $band->load('musicians'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
         }
     }

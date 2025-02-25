@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
                 return view('admin.bands.create');
             })->name('create');
             Route::post('/generate', [BandController::class, 'generate'])->name('generate');
+            Route::put('/{band}', [AdminController::class, 'updateBand'])->name('update');
         });
     });
 
