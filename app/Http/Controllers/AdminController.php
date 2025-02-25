@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Band;
 use App\Models\User;
 use App\Models\Musician;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -24,16 +26,17 @@ class AdminController extends Controller
     {
         $users = User::all();
         $musicians = Musician::all();
-        
+
         return view('admin.dashboard', compact('users', 'musicians'));
     }
 
     /**
      * Show the matches management page.
      */
-    public function matches()
+    public function bands()
     {
-        return view('admin.matches');
+        $bands = Band::with('musicians')->get();
+        return view('admin.bands.index', compact('bands'));
     }
 
     /**
@@ -82,15 +85,49 @@ class AdminController extends Controller
      */
     public function updateMusician(Request $request, Musician $musician)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'instruments' => ['required', 'array'],
-            'instruments.*' => ['string'],
-            'other' => ['nullable', 'string'],
-            'is_active' => ['required', 'boolean'],
-        ]);
+        if ($request->has('is_active') && count($request->all()) === 1) {
+            $validated = $request->validate([
+                'is_active' => ['required', 'boolean'],
+            ]);
 
-        $musician->update($validated);
+            $musician->update([
+                'is_active' => $validated['is_active']
+            ]);
+        } else {
+            $validated = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'instruments' => ['nullable', 'array'],
+                'instruments.*' => ['string'],
+                'other' => ['nullable', 'string'],
+                'is_active' => ['required', 'boolean'],
+                'vocalist' => ['boolean']
+            ]);
+
+            if (isset($validated['instruments'])) {
+                $instruments = array_map('strtolower', $validated['instruments']);
+
+                $isVocalist = in_array('vocals', $instruments);
+
+                $instrumentsWithoutVocals = array_values(
+                    array_filter($instruments, fn($instrument) => $instrument !== 'vocals')
+                );
+
+                $musician->update([
+                    'name' => $validated['name'],
+                    'instruments' => $instrumentsWithoutVocals,
+                    'other' => $validated['other'],
+                    'is_active' => $validated['is_active'],
+                    'vocalist' => $request->has('vocalist') ? $request->boolean('vocalist') : $isVocalist
+                ]);
+            } else {
+                $musician->update([
+                    'name' => $validated['name'],
+                    'other' => $validated['other'],
+                    'is_active' => $validated['is_active'],
+                    'vocalist' => $request->boolean('vocalist')
+                ]);
+            }
+        }
 
         return redirect()->route('admin.musicians')->with('status', 'musician-updated');
     }
@@ -134,5 +171,24 @@ class AdminController extends Controller
         Musician::whereIn('id', $musicians)->update(['is_active' => false]);
 
         return back()->with('status', 'musicians-deactivated');
+    }
+
+    /**
+     * Update the specified band's basic information.
+     *
+     * @param Request $request
+     * @param Band $band
+     * @return RedirectResponse
+     */
+    public function updateBand(Request $request, Band $band): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'status' => ['required', 'in:active,inactive'],
+        ]);
+
+        $band->update($validated);
+
+        return back()->with('status', 'band-updated');
     }
 }

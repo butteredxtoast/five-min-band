@@ -2,27 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMusicianRequest;
 use App\Models\Musician;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 class MusicianController extends Controller
 {
-    public function store(Request $request)
+    public function create(): View
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'instruments' => 'required|array',
-            'instruments.*' => 'string|in:Vocals,Guitar,Bass,Drums,Keys,Other',
-            'other' => 'nullable|string|max:255'
+        return view('musicians.create', [
+            'instruments' => ['Vocals', 'Guitar', 'Bass', 'Drums', 'Keys', 'Other']
         ]);
+    }
 
-        $musician = Musician::create([
-            'name' => $validated['name'],
-            'instruments' => $validated['instruments'],
-            'other' => $validated['other'],
-            'is_active' => true
-        ]);
+    public function store(StoreMusicianRequest $request): JsonResponse
+    {
+        try {
+            $musician = Musician::create($request->validated());
 
-        return redirect()->route('welcome')->with('success', 'Thank you for signing up!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Musician created successfully'
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create musician'
+            ], 500);
+        }
     }
 }
