@@ -32,7 +32,7 @@ class BandController extends Controller
         try {
             $band = $this->matchingService->generate(
                 $request['musician_count'],
-                $request->boolean('include_vocalist', true)
+                $request->boolean('include_vocalist', false)
             );
 
             return back()->with('success', 'Band generated successfully!')

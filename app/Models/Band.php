@@ -53,7 +53,7 @@ class Band extends Model
      * @throws Exception
      *
      */
-    public function addMusician(Musician $musician, string $instrument, bool $asVocalist = false): void
+    public function addMusician(Musician $musician, ?string $instrument, bool $asVocalist = false): void
     {
         Log::info('catdog Adding musician to band', [
             'band_id' => $this->id,
@@ -63,7 +63,7 @@ class Band extends Model
             'musician_instruments' => $musician->instruments
         ]);
 
-        if ($instrument && !in_array($instrument, $musician->instruments)) {
+        if ($instrument !== null && !in_array($instrument, $musician->instruments)) {
             throw new Exception("Instrument $instrument is not valid for musician " . $musician->name);
         }
 
