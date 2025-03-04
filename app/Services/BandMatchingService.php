@@ -53,7 +53,20 @@ class BandMatchingService
     */
     private function getEligibleMusicians(): Collection
     {
-        return Musician::where('is_active', true)->get();
+        $activeMusicians = Musician::where('is_active', true)->get();
+
+        $musiciansInActiveBands = Band::where('status', 'active')
+            ->with('musicians')
+            ->get()
+            ->pluck('musicians')
+            ->flatten()
+            ->pluck('id')
+            ->unique()
+            ->toArray();
+
+        return $activeMusicians->reject(function ($musician) use ($musiciansInActiveBands) {
+            return in_array($musician->id, $musiciansInActiveBands);
+        });
     }
 
     /**
@@ -65,12 +78,6 @@ class BandMatchingService
         // The available instrument types we'll randomly select from
         $availableInstrumentTypes = self::PRIORITIZED_INSTRUMENTS;
 
-        Log::info("Assigning instrumentalists", [
-            'band_id' => $band->id,
-            'count' => $count
-        ]);
-
-        // Assign the requested number of instrumentalists
         for ($i = 0; $i < $count; $i++) {
             // Randomly select an instrument type for this position
             $instrument = $availableInstrumentTypes[array_rand($availableInstrumentTypes)];
