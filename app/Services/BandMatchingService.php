@@ -19,7 +19,7 @@ class BandMatchingService
      * Generate a new band with matched musicians
      * @throws Exception
      */
-    public function generate(int $musicianCount, bool $includeVocalist): Band
+    public function generate(int $musicianCount, bool $includeVocalist, string $name = null): Band
     {
         $musicians = $this->getEligibleMusicians();
 
@@ -30,7 +30,7 @@ class BandMatchingService
         }
 
         $band = Band::create([
-            'name' => 'New Band ' . now()->format('Y-m-d'),
+            'name' => $name,
             'status' => 'active',
             'metadata' => [
                 'generated_at' => now(),

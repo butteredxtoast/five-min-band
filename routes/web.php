@@ -49,7 +49,13 @@ Route::middleware(['auth'])->group(function () {
                 return view('admin.bands.create');
             })->name('create');
             Route::post('/generate', [BandController::class, 'generate'])->name('generate');
+
+            // Admin Update Band Routes
             Route::put('/{band}', [AdminController::class, 'updateBand'])->name('update');
+            Route::post('/bulk-activate', [AdminController::class, 'bulkActivateBands'])->name('bulk-activate');
+            Route::post('/bulk-deactivate', [AdminController::class, 'bulkDeactivateBands'])->name('bulk-deactivate');
+            Route::post('/bulk-set-played', [AdminController::class, 'bulkSetPlayedBands'])->name('bulk-set-played');
+            Route::post('/bulk-set-not-played', [AdminController::class, 'bulkSetNotPlayedBands'])->name('bulk-set-not-played');
         });
     });
 

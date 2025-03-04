@@ -20,19 +20,17 @@ class BandController extends Controller
 
     public function generate(Request $request)
     {
-        Log::info("catdog inbound request", [
-            'request' => $request
-        ]);
-
-        $request->validate([
+        $validated = $request->validate([
             'musician_count' => ['required', 'integer', 'min:3', 'max:10'],
             'include_vocalist' => ['boolean'],
+            'name' => 'nullable|string|max:255',
         ]);
 
         try {
             $band = $this->matchingService->generate(
-                $request['musician_count'],
-                $request->boolean('include_vocalist', false)
+                $validated['musician_count'],
+                $request->boolean('include_vocalist', false),
+                $validated['name'] ?? null
             );
 
             return back()->with('success', 'Band generated successfully!')

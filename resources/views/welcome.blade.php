@@ -28,10 +28,9 @@
             <!-- Header Section -->
             <div class="mb-12">
                 <h1 class="text-6xl font-bold mb-6">Five Minute Band</h1>
-                <p class="text-xl mb-8 text-gray-600">Where musicians connect instantly.</p>
                 <!-- CTA Buttons -->
                 <div class="space-x-4">
-                    <a href="{{ route('signup') }}" 
+                    <a href="{{ route('signup') }}"
                        class="custom-button inline-block font-semibold text-lg">
                         Join the Band
                     </a>

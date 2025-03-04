@@ -70,7 +70,7 @@
                         <div class="mt-8">
                             <h2 class="text-xl font-semibold text-gray-800 mb-4">Generated Band Match</h2>
                             <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="font-medium text-gray-900 mb-4">Your Five Minute Band</h3>
+                                <h3 class="font-medium text-gray-900 mb-4">{{ session('band')->name ?? 'Your Five Minute Band' }}</h3>
                                 <ul class="list-disc list-inside space-y-2 text-gray-600">
                                     @foreach(session('band')->musicians as $musician)
                                         <li>

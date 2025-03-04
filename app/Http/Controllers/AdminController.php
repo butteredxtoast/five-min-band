@@ -187,8 +187,66 @@ class AdminController extends Controller
             'status' => ['required', 'in:active,inactive'],
         ]);
 
+        $validated['played'] = $request->has('played');
+
         $band->update($validated);
 
         return back()->with('status', 'band-updated');
+    }
+
+    /**
+     * Bulk activate bands.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkActivateBands(Request $request): RedirectResponse
+    {
+        $bands = $request->input('bands', []);
+        Band::whereIn('id', $bands)->update(['status' => 'active']);
+
+        return back()->with('status', 'Selected bands have been activated.');
+    }
+
+    /**
+     * Bulk deactivate bands.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkDeactivateBands(Request $request): RedirectResponse
+    {
+        $bands = $request->input('bands', []);
+        Band::whereIn('id', $bands)->update(['status' => 'inactive']);
+
+        return back()->with('status', 'Selected bands have been deactivated.');
+    }
+
+    /**
+     * Bulk set bands as played.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkSetPlayedBands(Request $request): RedirectResponse
+    {
+        $bands = $request->input('bands', []);
+        Band::whereIn('id', $bands)->update(['played' => true]);
+
+        return back()->with('status', 'Selected bands have been set as played.');
+    }
+
+    /**
+     * Bulk set bands as not played.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkSetNotPlayedBands(Request $request): RedirectResponse
+    {
+        $bands = $request->input('bands', []);
+        Band::whereIn('id', $bands)->update(['played' => false]);
+
+        return back()->with('status', 'Selected bands have been set as not played.');
     }
 }

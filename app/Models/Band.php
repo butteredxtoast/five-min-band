@@ -15,11 +15,13 @@ class Band extends Model
     protected $fillable = [
         'name',
         'status',
+        'played',
         'metadata',
     ];
 
     protected $casts = [
         'metadata' => 'array',
+        'played' => 'boolean'
     ];
 
     /**
@@ -55,14 +57,6 @@ class Band extends Model
      */
     public function addMusician(Musician $musician, ?string $instrument, bool $asVocalist = false): void
     {
-        Log::info('catdog Adding musician to band', [
-            'band_id' => $this->id,
-            'musician_id' => $musician->id,
-            'instrument' => $instrument,
-            'as_vocalist' => $asVocalist,
-            'musician_instruments' => $musician->instruments
-        ]);
-
         if ($instrument !== null && !in_array($instrument, $musician->instruments)) {
             throw new Exception("Instrument $instrument is not valid for musician " . $musician->name);
         }
