@@ -147,40 +147,40 @@
                         </div>
                     @endif
 
-                    @if(session('band'))
+                    @if(session('band_data'))
                         <div class="mt-8">
                             <h2 class="text-xl font-semibold text-gray-800 mb-4">Generated Band Match</h2>
                             <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="font-medium text-gray-900 mb-4">{{ session('band')->name ?? 'Your Five Minute Band' }}</h3>
+                                <h3 class="font-medium text-gray-900 mb-4">{{ session('band_data')['name'] ?? 'Your Five Minute Band' }}</h3>
 
-                                @if(session('band')->metadata['band_type'] ?? false)
+                                @if(isset(session('band_data')['metadata']['band_type']))
                                     <div class="mb-4 inline-block px-3 py-1 text-sm font-semibold bg-blue-100 text-blue-800 rounded-full">
-                                        {{ ucfirst(session('band')->metadata['band_type']) }} Band
+                                        {{ ucfirst(session('band_data')['metadata']['band_type']) }} Band
                                     </div>
                                 @endif
 
                                 <ul class="list-disc list-inside space-y-2 text-gray-600">
-                                    @foreach(session('band')->musicians as $musician)
+                                    @foreach(session('band_data')['musicians'] as $musician)
                                         <li>
-                                            {{ $musician->name }} -
-                                            @if($musician->pivot->vocalist)
-                                                <span class="inline-flex px-2 text-xs font-semibold leading-5 text-purple-800 bg-purple-100 rounded-full">
+                                            {{ $musician['name'] }} -
+                                            @if($musician['pivot']['vocalist'])
+                                                <span class="inline-flex px-2 text-xs font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
                                                     Vocalist
                                                 </span>
-                                                @if($musician->pivot->instrument)
+                                                @if($musician['pivot']['instrument'])
                                                     {{ 'and' }}
-                                                    <span class="text-blue-600 font-medium">
-                                                        {{ ucfirst($musician->pivot->instrument) }}
-                                                        @if($musician->pivot->instrument === 'other' && $musician->other)
-                                                            ({{ $musician->other }})
+                                                    <span class="inline-flex px-2 text-xs font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                                                        {{ ucfirst($musician['pivot']['instrument']) }}
+                                                        @if($musician['pivot']['instrument'] === 'other' && isset($musician['other']))
+                                                            ({{ $musician['other'] }})
                                                         @endif
                                                     </span>
                                                 @endif
                                             @else
-                                                <span class="text-blue-600 font-medium">
-                                                    {{ ucfirst($musician->pivot->instrument) }}
-                                                    @if($musician->pivot->instrument === 'other' && $musician->other)
-                                                        ({{ $musician->other }})
+                                                <span class="inline-flex px-2 text-xs font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                                                    {{ ucfirst($musician['pivot']['instrument']) }}
+                                                    @if($musician['pivot']['instrument'] === 'other' && isset($musician['other']))
+                                                        ({{ $musician['other'] }})
                                                     @endif
                                                 </span>
                                             @endif

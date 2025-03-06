@@ -54,6 +54,7 @@ class BandController extends Controller
                     return [
                         'id' => $musician->id,
                         'name' => $musician->name,
+                        'other' => $musician->other,
                         'pivot' => [
                             'instrument' => $musician->pivot->instrument ?? null,
                             'vocalist' => $musician->pivot->vocalist ?? false
