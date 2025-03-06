@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use App\Services\BandMatchingService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class BandController extends Controller
 {
@@ -20,18 +21,30 @@ class BandController extends Controller
 
     public function generate(Request $request)
     {
+        $validBandTypes = array_merge(['random'], array_keys(BandMatchingService::BAND_TYPES));
+
         $validated = $request->validate([
-            'musician_count' => ['required', 'integer', 'min:3', 'max:10'],
+            'musician_count' => ['integer', 'min:2', 'max:10', 'required_if:band_type,random'],
             'include_vocalist' => ['boolean'],
             'name' => 'nullable|string|max:255',
+            'band_type' => ['required', 'string', Rule::in($validBandTypes)]
         ]);
 
         try {
-            $band = $this->matchingService->generate(
-                $validated['musician_count'],
-                $request->boolean('include_vocalist', false),
-                $validated['name'] ?? null
-            );
+            $options = [
+                'name' => $validated['name'] ?? null,
+            ];
+
+            // Handle based on band type selection
+            if ($validated['band_type'] === 'random') {
+                $options['musician_count'] = $validated['musician_count'];
+                $options['include_vocalist'] = $request->boolean('include_vocalist', false);
+                $options['band_type'] = null; // Ensure no band type is set for random mode
+            } else {
+                $options['band_type'] = $validated['band_type'];
+            }
+
+            $band = $this->matchingService->generate($options);
 
             // Create a simplified version of the band data for session storage
             $simplifiedBand = [

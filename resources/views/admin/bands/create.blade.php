@@ -13,24 +13,103 @@
                     <p class="text-gray-600">Generate a random band match from our pool of musicians!</p>
                 </div>
 
-                <div x-data="{ musician_count: 3 }">
+                <div x-data="{ bandTypeSelected: 'random', showMusicianCount: true }">
                     <form method="POST" action="{{ route('admin.bands.generate') }}" class="space-y-6">
                         @csrf
 
-                        <div>
+                        <!-- Band Type Selection -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Band Type</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <div class="flex items-center">
+                                    <input type="radio"
+                                           name="band_type"
+                                           id="band_type_random"
+                                           x-model="bandTypeSelected"
+                                           value="random"
+                                           @click="showMusicianCount = true"
+                                           class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                    <label for="band_type_random" class="ml-2 block text-sm text-gray-700">
+                                        Random
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio"
+                                           name="band_type"
+                                           id="band_type_punk"
+                                           x-model="bandTypeSelected"
+                                           value="punk"
+                                           @click="showMusicianCount = false"
+                                           class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                    <label for="band_type_punk" class="ml-2 block text-sm text-gray-700">
+                                        Punk Band
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio"
+                                           name="band_type"
+                                           id="band_type_rock"
+                                           x-model="bandTypeSelected"
+                                           value="rock"
+                                           @click="showMusicianCount = false"
+                                           class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                    <label for="band_type_rock" class="ml-2 block text-sm text-gray-700">
+                                        Rock Band
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio"
+                                           name="band_type"
+                                           id="band_type_indie"
+                                           x-model="bandTypeSelected"
+                                           value="indie"
+                                           @click="showMusicianCount = false"
+                                           class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                    <label for="band_type_indie" class="ml-2 block text-sm text-gray-700">
+                                        Indie Band
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio"
+                                           name="band_type"
+                                           id="band_type_jazz"
+                                           x-model="bandTypeSelected"
+                                           value="jazz"
+                                           @click="showMusicianCount = false"
+                                           class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                    <label for="band_type_jazz" class="ml-2 block text-sm text-gray-700">
+                                        Jazz Band
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio"
+                                           name="band_type"
+                                           id="band_type_electronic"
+                                           x-model="bandTypeSelected"
+                                           value="electronic"
+                                           @click="showMusicianCount = false"
+                                           class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                    <label for="band_type_electronic" class="ml-2 block text-sm text-gray-700">
+                                        Electronic
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Musician Count (only visible when Random is selected) -->
+                        <div x-show="showMusicianCount">
                             <label for="musician_count" class="block text-sm font-medium text-gray-700">Number of Musicians in Band</label>
                             <div class="mt-2 flex items-center space-x-4">
                                 <input type="number"
                                        name="musician_count"
                                        id="musician_count"
-                                       x-model="musician_count"
                                        min="2"
                                        max="10"
                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                        value="3">
                             </div>
                             @error('musician_count')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -43,7 +122,8 @@
                                    placeholder="Enter band name">
                         </div>
 
-                        <div class="flex items-center space-x-2">
+                        <!-- Vocalist option (only available for Random type) -->
+                        <div x-show="showMusicianCount" class="flex items-center space-x-2">
                             <input type="checkbox"
                                    name="include_vocalist"
                                    id="include_vocalist"
@@ -52,6 +132,7 @@
                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50">
                             <label for="include_vocalist" class="text-sm text-gray-700">Include Vocalist</label>
                         </div>
+
                         <div class="flex justify-center">
                             <button type="submit"
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -66,34 +147,46 @@
                         </div>
                     @endif
 
-                    @if(session('band_data'))
+                    @if(session('band'))
                         <div class="mt-8">
                             <h2 class="text-xl font-semibold text-gray-800 mb-4">Generated Band Match</h2>
                             <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="font-medium text-gray-900 mb-4">{{ session('band_data')['name'] ?? 'Your Five Minute Band' }}</h3>
+                                <h3 class="font-medium text-gray-900 mb-4">{{ session('band')->name ?? 'Your Five Minute Band' }}</h3>
 
-                                @if(!empty(session('band_data')['musicians']))
-                                    <ul class="list-disc list-inside space-y-2 text-gray-600">
-                                        @foreach(session('band_data')['musicians'] as $musician)
-                                            <li>
-                                                {{ $musician['name'] ?? 'Unknown Musician' }} -
-                                                @if(!empty($musician['pivot']['vocalist']) && $musician['pivot']['vocalist'])
-                                                    <span class="text-purple-600 font-medium">Vocalist</span>
-                                                    @if(!empty($musician['pivot']['instrument']))
-                                                        and
-                                                        <span class="text-blue-600 font-medium">{{ $musician['pivot']['instrument'] }}</span>
-                                                    @endif
-                                                @elseif(!empty($musician['pivot']['instrument']))
-                                                    <span class="text-blue-600 font-medium">{{ $musician['pivot']['instrument'] }}</span>
-                                                @else
-                                                    <span class="text-gray-600">Unknown role</span>
-                                                @endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    <p class="text-gray-600">No musicians found in this band.</p>
+                                @if(session('band')->metadata['band_type'] ?? false)
+                                    <div class="mb-4 inline-block px-3 py-1 text-sm font-semibold bg-blue-100 text-blue-800 rounded-full">
+                                        {{ ucfirst(session('band')->metadata['band_type']) }} Band
+                                    </div>
                                 @endif
+
+                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                    @foreach(session('band')->musicians as $musician)
+                                        <li>
+                                            {{ $musician->name }} -
+                                            @if($musician->pivot->vocalist)
+                                                <span class="inline-flex px-2 text-xs font-semibold leading-5 text-purple-800 bg-purple-100 rounded-full">
+                                                    Vocalist
+                                                </span>
+                                                @if($musician->pivot->instrument)
+                                                    {{ 'and' }}
+                                                    <span class="text-blue-600 font-medium">
+                                                        {{ ucfirst($musician->pivot->instrument) }}
+                                                        @if($musician->pivot->instrument === 'other' && $musician->other)
+                                                            ({{ $musician->other }})
+                                                        @endif
+                                                    </span>
+                                                @endif
+                                            @else
+                                                <span class="text-blue-600 font-medium">
+                                                    {{ ucfirst($musician->pivot->instrument) }}
+                                                    @if($musician->pivot->instrument === 'other' && $musician->other)
+                                                        ({{ $musician->other }})
+                                                    @endif
+                                                </span>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
                     @endif
