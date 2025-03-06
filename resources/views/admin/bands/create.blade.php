@@ -65,31 +65,6 @@
                             {{ session('error') }}
                         </div>
                     @endif
-
-                    @if(session('band'))
-                        <div class="mt-8">
-                            <h2 class="text-xl font-semibold text-gray-800 mb-4">Generated Band Match</h2>
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="font-medium text-gray-900 mb-4">{{ session('band')->name ?? 'Your Five Minute Band' }}</h3>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600">
-                                    @foreach(session('band')->musicians as $musician)
-                                        <li>
-                                            {{ $musician->name }} -
-                                            @if($musician->pivot->vocalist)
-                                                <span class="text-purple-600 font-medium">Vocalist</span>
-                                                @if($musician->pivot->instrument)
-                                                    {{ 'and' }}
-                                                    <span class="text-blue-600 font-medium">{{ $musician->pivot->instrument }}</span>
-                                                @endif
-                                            @else
-                                                <span class="text-blue-600 font-medium">{{ $musician->pivot->instrument }}</span>
-                                            @endif
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
