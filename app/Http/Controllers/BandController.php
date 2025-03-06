@@ -33,10 +33,30 @@ class BandController extends Controller
                 $validated['name'] ?? null
             );
 
+            // Create a simplified version of the band data for session storage
+            $simplifiedBand = [
+                'id' => $band->id,
+                'name' => $band->name,
+                'musicians' => $band->musicians->map(function($musician) {
+                    return [
+                        'id' => $musician->id,
+                        'name' => $musician->name,
+                        'pivot' => [
+                            'instrument' => $musician->pivot->instrument ?? null,
+                            'vocalist' => $musician->pivot->vocalist ?? false
+                        ]
+                    ];
+                })->toArray()
+            ];
+
             return back()->with('success', 'Band generated successfully!')
-                ->with('band', $band->load('musicians'));
+                ->with('band_data', $simplifiedBand);
 
         } catch (Exception $e) {
+            Log::error('Band generation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return back()->with('error', $e->getMessage());
         }
     }
