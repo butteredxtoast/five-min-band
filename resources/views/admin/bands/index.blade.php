@@ -116,7 +116,7 @@
 
                         <!-- Table Body -->
                         <div class="flex flex-col divide-y divide-gray-200">
-                            @foreach ($bands as $band)
+                            @foreach ($bands->sortByDesc('id') as $band)
                                 <div class="flex items-center hover:bg-gray-50">
                                     <div class="w-12 px-6 py-4">
                                         <label class="inline-flex items-center">
@@ -134,12 +134,24 @@
                                             @foreach ($band->musicians as $musician)
                                                 <div class="flex items-center space-x-2">
                                                     <span class="text-sm text-gray-900">{{ $musician->name }}</span>
-                                                    <span class="inline-flex px-2 text-xs font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
-                                                        {{ $musician->pivot->instrument }}
-                                                    </span>
                                                     @if ($musician->pivot->vocalist)
                                                         <span class="inline-flex px-2 text-xs font-semibold leading-5 text-purple-800 bg-purple-100 rounded-full">
                                                             Vocalist
+                                                        </span>
+                                                        @if ($musician->pivot->instrument)
+                                                            <span class="inline-flex px-2 text-xs font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                                                            {{ $musician->pivot->instrument }}
+                                                                @if ($musician->pivot->instrument === 'other' && $musician->other)
+                                                                    ({{ $musician->other }})
+                                                                @endif
+                                                            </span>
+                                                        @endif
+                                                    @elseif ($musician->pivot->instrument)
+                                                        <span class="inline-flex px-2 text-xs font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                                                        {{ $musician->pivot->instrument }}
+                                                            @if ($musician->pivot->instrument === 'other' && $musician->other)
+                                                                ({{ $musician->other }})
+                                                            @endif
                                                         </span>
                                                     @endif
                                                 </div>
