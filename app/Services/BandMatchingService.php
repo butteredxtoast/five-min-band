@@ -108,6 +108,13 @@ class BandMatchingService
                 $assignedInstrument = $instrument;
             }
 
+            if (strtolower($instrument) === 'vocals') {
+                Log::warning('Vocalist assigned as instrumentalist', [
+                    'band_id' => $band->id,
+                    'musician_id' => $selectedMusician->id
+                ]);
+            }
+
             // Add them to the band
             $band->addMusician($selectedMusician, $assignedInstrument);
 
