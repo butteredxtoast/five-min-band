@@ -65,6 +65,38 @@
                             {{ session('error') }}
                         </div>
                     @endif
+
+                    @if(session('band_data'))
+                        <div class="mt-8">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">Generated Band Match</h2>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h3 class="font-medium text-gray-900 mb-4">{{ session('band_data')['name'] ?? 'Your Five Minute Band' }}</h3>
+
+                                @if(!empty(session('band_data')['musicians']))
+                                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                        @foreach(session('band_data')['musicians'] as $musician)
+                                            <li>
+                                                {{ $musician['name'] ?? 'Unknown Musician' }} -
+                                                @if(!empty($musician['pivot']['vocalist']) && $musician['pivot']['vocalist'])
+                                                    <span class="text-purple-600 font-medium">Vocalist</span>
+                                                    @if(!empty($musician['pivot']['instrument']))
+                                                        and
+                                                        <span class="text-blue-600 font-medium">{{ $musician['pivot']['instrument'] }}</span>
+                                                    @endif
+                                                @elseif(!empty($musician['pivot']['instrument']))
+                                                    <span class="text-blue-600 font-medium">{{ $musician['pivot']['instrument'] }}</span>
+                                                @else
+                                                    <span class="text-gray-600">Unknown role</span>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-gray-600">No musicians found in this band.</p>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
