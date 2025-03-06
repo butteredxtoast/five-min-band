@@ -78,7 +78,7 @@
                                             @if($musician->pivot->vocalist)
                                                 <span class="text-purple-600 font-medium">Vocalist</span>
                                                 @if($musician->pivot->instrument)
-                                                    and
+                                                    {{ 'and' }}
                                                     <span class="text-blue-600 font-medium">{{ $musician->pivot->instrument }}</span>
                                                 @endif
                                             @else

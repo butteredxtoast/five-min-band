@@ -53,20 +53,14 @@ class BandMatchingService
     */
     private function getEligibleMusicians(): Collection
     {
-        $activeMusicians = Musician::where('is_active', true)->get();
-
-        $musiciansInActiveBands = Band::where('status', 'active')
-            ->with('musicians')
-            ->get()
-            ->pluck('musicians')
-            ->flatten()
-            ->pluck('id')
-            ->unique()
-            ->toArray();
-
-        return $activeMusicians->reject(function ($musician) use ($musiciansInActiveBands) {
-            return in_array($musician->id, $musiciansInActiveBands);
-        });
+        return Musician::where('is_active', true)
+            ->whereNotIn('id', function($query) {
+                $query->select('musician_id')
+                    ->from('band_musicians')
+                    ->join('bands', 'bands.id', '=', 'band_musicians.band_id')
+                    ->where('bands.status', 'active');
+            })
+            ->get();
     }
 
     /**
@@ -75,20 +69,16 @@ class BandMatchingService
      */
     private function assignInstrumentalists(Band $band, Collection &$musicians, int $count): void
     {
-        // The available instrument types we'll randomly select from
         $availableInstrumentTypes = self::PRIORITIZED_INSTRUMENTS;
 
         for ($i = 0; $i < $count; $i++) {
-            // Randomly select an instrument type for this position
             $instrument = $availableInstrumentTypes[array_rand($availableInstrumentTypes)];
 
-            // Find musicians who can play this instrument
             $eligibleMusicians = $musicians->filter(function ($musician) use ($instrument) {
                 return in_array($instrument, $musician->instruments);
             });
 
             if ($eligibleMusicians->isEmpty()) {
-                // If no one plays this specific instrument, find someone with any instrument skill
                 $eligibleMusicians = $musicians->filter(function ($musician) {
                     return !empty($musician->instruments);
                 });
@@ -97,7 +87,6 @@ class BandMatchingService
                     throw new Exception("Not enough musicians with required skills");
                 }
 
-                // Select a random musician and use their first instrument
                 $selectedMusician = $eligibleMusicians->random();
                 $assignedInstrument = !empty($selectedMusician->instruments)
                     ? $selectedMusician->instruments[0]
@@ -108,17 +97,8 @@ class BandMatchingService
                 $assignedInstrument = $instrument;
             }
 
-            if (strtolower($instrument) === 'vocals') {
-                Log::warning('Vocalist assigned as instrumentalist', [
-                    'band_id' => $band->id,
-                    'musician_id' => $selectedMusician->id
-                ]);
-            }
-
-            // Add them to the band
             $band->addMusician($selectedMusician, $assignedInstrument);
 
-            // Remove from the available pool
             $musicians = $musicians->reject(fn($m) => $m->id === $selectedMusician->id);
         }
     }
